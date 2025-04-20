@@ -26,7 +26,7 @@ public class User {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
 
-    private String name;
+    private String username;
     private String email;
     private String password;
 
@@ -35,4 +35,7 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Expense> expense;
+
+    public String getPassword() { return password; }
+    public String getUsername() { return username; }
 }
