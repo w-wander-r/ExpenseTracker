@@ -35,4 +35,7 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Expense> expense;
+
+    public String getPassword() { return password; }
+    public String getUsername() { return name; }
 }
