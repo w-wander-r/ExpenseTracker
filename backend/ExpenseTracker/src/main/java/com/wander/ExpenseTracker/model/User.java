@@ -27,7 +27,6 @@ public class User {
     private Long id;
 
     private String username;
-    private String email;
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -35,7 +34,4 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Expense> expense;
-
-    public String getPassword() { return password; }
-    public String getUsername() { return username; }
 }
