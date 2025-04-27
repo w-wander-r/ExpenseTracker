@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,4 +40,11 @@ public class ExpenseController {
         return expenseRepo.save(expense);
     }
     
+    @DeleteMapping("/{id}")
+    public void deleteExpense(@PathVariable Long id, Authentication authentication) {
+        User user = userRepo.findByUsername(authentication.getName());
+        Expense expense = expenseRepo.findByIdAndUser(id, user)
+            .orElseThrow(() -> new RuntimeException("Expense not found"));
+        expenseRepo.delete(expense);
+    }
 }
