@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,6 +29,13 @@ public class ExpenseController {
     public List<Expense> getAllExpenses(Authentication authentication) {
         User user = userRepo.findByUsername(authentication.getName());
         return expenseRepo.findByUser(user);
+    }
+
+    @PostMapping
+    public Expense addExpense(@RequestBody Expense expense, Authentication authentication) {
+        User user = userRepo.findByUsername(authentication.getName());
+        expense.setUser(user);
+        return expenseRepo.save(expense);
     }
     
 }
