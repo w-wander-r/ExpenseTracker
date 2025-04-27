@@ -1,5 +1,6 @@
 package com.wander.ExpenseTracker.repo;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,4 +14,5 @@ import com.wander.ExpenseTracker.model.User;
 public interface ExpenseRepo extends JpaRepository<Expense, Long>{
     List<Expense> findByUser(User user);
     Optional<Expense> findByIdAndUser(Long id, User user);
+    List<Expense> findByUserAndDateBetween(User user, LocalDate start, LocalDate end);
 }
