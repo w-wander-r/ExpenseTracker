@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wander.ExpenseTracker.model.Expense;
+import com.wander.ExpenseTracker.model.ExpenseDTO;
+import com.wander.ExpenseTracker.model.ExpenseMapper;
 import com.wander.ExpenseTracker.model.User;
 import com.wander.ExpenseTracker.repo.ExpenseRepo;
 import com.wander.ExpenseTracker.repo.UserRepo;
@@ -32,16 +35,31 @@ public class ExpenseController {
     private UserRepo userRepo;
 
     @GetMapping
-    public List<Expense> getAllExpenses(Authentication authentication) {
+    public List<ExpenseDTO> getAllExpenses(Authentication authentication) {
         User user = userRepo.findByUsername(authentication.getName());
-        return expenseRepo.findByUser(user);
+        List<Expense> expenses = expenseRepo.findByUser(user);
+        return expenses.stream()
+            .map(ExpenseMapper::toDTO)
+            .collect(Collectors.toList());
     }
 
     @PostMapping
-    public Expense addExpense(@RequestBody Expense expense, Authentication authentication) {
+    public ExpenseDTO addExpense(@RequestBody ExpenseDTO expenseDTO, Authentication authentication) {
         User user = userRepo.findByUsername(authentication.getName());
-        expense.setUser(user);
-        return expenseRepo.save(expense);
+        Expense expense = new Expense();
+        expense.setDescription(expenseDTO.getDescription());
+        expense.setAmount(expenseDTO.getAmount());
+        expense.setDate(expenseDTO.getDate());
+        expense.setUser (user);
+        Expense savedExpense = expenseRepo.save(expense);
+
+        ExpenseDTO savedExpenseDTO = new ExpenseDTO();
+        savedExpenseDTO.setId(savedExpense.getId());
+        savedExpenseDTO.setDescription(savedExpense.getDescription());
+        savedExpenseDTO.setAmount(savedExpense.getAmount());
+        savedExpenseDTO.setDate(savedExpense.getDate());
+        
+        return savedExpenseDTO;
     }
     
     @DeleteMapping("/{id}")
