@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wander.ExpenseTracker.model.User;
+import com.wander.ExpenseTracker.model.UserDTO;
 import com.wander.ExpenseTracker.service.UserService;
 
 
@@ -18,10 +19,28 @@ public class UserController {
     private UserService service;
 
     @PostMapping("/register")
-    public User register(@RequestBody User user) {
-        return service.register(user);
+    public UserDTO register(@RequestBody UserDTO userDTO) {
+        User user = new User();
+        user.setUsername(userDTO.getUsername());
+        user.setPassword(userDTO.getPassword());
+        user.setRole(userDTO.getRole());
+        User savedUser = service.register(user);
+
+        UserDTO savedUserDTO = new UserDTO();
+        savedUserDTO.setUsername(savedUser.getUsername());
+        savedUserDTO.setPassword(savedUser.getPassword());
+        savedUserDTO.setRole(savedUser.getRole());
+        
+        return savedUserDTO;
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody User user) { return service.verify(user); }
+    public String login(@RequestBody UserDTO userDTO) {
+        User user = new User();
+        user.setUsername(userDTO.getUsername());
+        user.setPassword(userDTO.getPassword());
+        user.setRole(userDTO.getRole());
+
+        return service.verify(user);
+    }
 }

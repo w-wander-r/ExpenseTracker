@@ -30,7 +30,7 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Expense> expense;
+    private List<Expense> expenses;
 
     public Long getId() {
         return id;
@@ -65,10 +65,10 @@ public class User {
     }
 
     public List<Expense> getExpense() {
-        return expense;
+        return expenses;
     }
 
-    public void setExpense(List<Expense> expense) {
-        this.expense = expense;
+    public void setExpense(List<Expense> expenses) {
+        this.expenses = expenses;
     }
 }
