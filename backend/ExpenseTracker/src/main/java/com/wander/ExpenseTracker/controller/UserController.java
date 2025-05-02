@@ -10,7 +10,20 @@ import com.wander.ExpenseTracker.model.User;
 import com.wander.ExpenseTracker.model.UserDTO;
 import com.wander.ExpenseTracker.service.UserService;
 
-
+// TODO: add validation for register method
+/**
+ * The UserController class provides endpoints for user authentication operations
+ * including registration and login. This controller works with UserDTO objects to ensure
+ * only necessary information is transferred between client and server.
+ * <p>
+ * All endpoints are prefixed with "/api/auth" and return appropriate responses for
+ * authentication-related operations. The controller delegates business logic to
+ * the UserService class.
+ * 
+ * @see UserService
+ * @see UserDTO
+ * @see User
+ */
 @RestController
 @RequestMapping("api/auth")
 public class UserController {
