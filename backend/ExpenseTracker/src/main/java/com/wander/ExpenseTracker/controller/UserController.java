@@ -1,6 +1,13 @@
 package com.wander.ExpenseTracker.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.wander.ExpenseTracker.model.User;
 import com.wander.ExpenseTracker.model.UserDTO;
 import com.wander.ExpenseTracker.service.UserService;
+
+import jakarta.validation.Valid;
 
 // TODO: add validation for register method
 /**
@@ -32,7 +41,22 @@ public class UserController {
     private UserService service;
 
     @PostMapping("/register")
-    public UserDTO register(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<?> register(@Valid @RequestBody UserDTO userDTO, BindingResult bindingResult) {
+        
+        if (bindingResult.hasErrors()) {
+            List<String> errors = bindingResult.getAllErrors().stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.toList());
+            
+            return ResponseEntity.badRequest().body(errors);
+        }
+
+        if (service.usernameExists(userDTO.getUsername())) {
+            return ResponseEntity
+                .badRequest()
+                .body("Username already exist");
+        }
+
         User user = new User();
         user.setUsername(userDTO.getUsername());
         user.setPassword(userDTO.getPassword());
@@ -44,16 +68,28 @@ public class UserController {
         savedUserDTO.setPassword(savedUser.getPassword());
         savedUserDTO.setRole(savedUser.getRole());
         
-        return savedUserDTO;
+        return ResponseEntity.ok(userDTO);
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<?> login(@RequestBody UserDTO userDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            List<String> errors = bindingResult.getAllErrors().stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.toList());
+            
+            return ResponseEntity.badRequest().body(errors);
+        }
+
         User user = new User();
         user.setUsername(userDTO.getUsername());
         user.setPassword(userDTO.getPassword());
         user.setRole(userDTO.getRole());
 
-        return service.verify(user);
+        try {
+            return ResponseEntity.ok(service.verify(user));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
     }
 }

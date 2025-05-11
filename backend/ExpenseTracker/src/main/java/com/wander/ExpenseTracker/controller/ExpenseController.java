@@ -36,7 +36,7 @@ public class ExpenseController {
 
     @GetMapping
     public List<ExpenseDTO> getAllExpenses(Authentication authentication) {
-        User user = userRepo.findByUsername(authentication.getName());
+        User user = userRepo.findByUsername(authentication.getName()).orElseThrow(() -> new RuntimeException("User not found"));
         List<Expense> expenses = expenseRepo.findByUser(user);
         return expenses.stream()
             .map(ExpenseMapper::toDTO)
@@ -45,7 +45,7 @@ public class ExpenseController {
 
     @PostMapping
     public ExpenseDTO addExpense(@RequestBody ExpenseDTO expenseDTO, Authentication authentication) {
-        User user = userRepo.findByUsername(authentication.getName());
+        User user = userRepo.findByUsername(authentication.getName()).orElseThrow(() -> new RuntimeException("User not found"));
         Expense expense = new Expense();
         expense.setDescription(expenseDTO.getDescription());
         expense.setAmount(expenseDTO.getAmount());
@@ -64,7 +64,7 @@ public class ExpenseController {
     
     @DeleteMapping("/{id}")
     public void deleteExpense(@PathVariable Long id, Authentication authentication) {
-        User user = userRepo.findByUsername(authentication.getName());
+        User user = userRepo.findByUsername(authentication.getName()).orElseThrow(() -> new RuntimeException("User not found"));
         Expense expense = expenseRepo.findByIdAndUser(id, user)
             .orElseThrow(() -> new RuntimeException("Expense not found"));
         expenseRepo.delete(expense);
@@ -76,7 +76,7 @@ public class ExpenseController {
         @RequestParam int month,
         Authentication authentication
     ) {
-        User user = userRepo.findByUsername(authentication.getName());
+        User user = userRepo.findByUsername(authentication.getName()).orElseThrow(() -> new RuntimeException("User not found"));
         LocalDate start = LocalDate.of(year, month, 1);
         LocalDate end = start.withDayOfMonth(start.lengthOfMonth());
 

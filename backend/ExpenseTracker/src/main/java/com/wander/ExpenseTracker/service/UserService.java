@@ -1,6 +1,5 @@
 package com.wander.ExpenseTracker.service;
 
-import com.wander.ExpenseTracker.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -8,11 +7,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import static com.wander.ExpenseTracker.model.Role.USER;
 import com.wander.ExpenseTracker.model.User;
 import com.wander.ExpenseTracker.repo.UserRepo;
-import com.wander.ExpenseTracker.service.JwtService;
-
-import static com.wander.ExpenseTracker.model.Role.USER;
 
 @Service
 public class UserService {
@@ -41,5 +38,9 @@ public class UserService {
                 );
 
         return authentication.isAuthenticated() ? jwtService.generateToken(user.getUsername()) : "err";
+    }
+
+    public boolean usernameExists(String username) {
+        return repo.findByUsername(username).isPresent();
     }
 }
