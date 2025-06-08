@@ -19,7 +19,6 @@ import com.wander.ExpenseTracker.service.UserService;
 
 import jakarta.validation.Valid;
 
-// TODO: add validation for register method
 /**
  * The UserController class provides endpoints for user authentication operations
  * including registration and login. This controller works with UserDTO objects to ensure

@@ -3,7 +3,6 @@ package com.wander.ExpenseTracker.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class UserDTO {
@@ -16,7 +15,6 @@ public class UserDTO {
     @Size(min = 8, max = 32, message = "Password must be between 8 and 32 characters")
     private String password;
     
-    @NotNull(message = "Role cannot be null")
     private Role role;
 
     public Role getRole() {
