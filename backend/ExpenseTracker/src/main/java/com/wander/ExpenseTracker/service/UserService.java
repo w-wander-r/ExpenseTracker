@@ -1,5 +1,10 @@
 package com.wander.ExpenseTracker.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.naming.AuthenticationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,13 +36,17 @@ public class UserService {
         return repo.save(user);
     }
 
-    public String verify(User user) {
-        Authentication authentication =
-                authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
-                );
-
-        return authentication.isAuthenticated() ? jwtService.generateToken(user.getUsername()) : "err";
+    public Map<String, String> verify(User user) throws AuthenticationException {
+        Authentication authentication = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
+        );
+        
+        if (authentication.isAuthenticated()) {
+            Map<String, String> response = new HashMap<>();
+            response.put("accessToken", jwtService.generateToken(user.getUsername()));
+            return response;
+        }
+        throw new AuthenticationException("Authentication failed");
     }
 
     public boolean usernameExists(String username) {

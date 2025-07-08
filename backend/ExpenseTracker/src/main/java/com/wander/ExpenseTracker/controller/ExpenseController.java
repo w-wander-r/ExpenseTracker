@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -46,7 +47,7 @@ public class ExpenseController {
     }
 
     @PostMapping
-    public ExpenseDTO addExpense(@RequestBody ExpenseDTO expenseDTO, Authentication authentication) {
+    public ExpenseDTO addExpense(@Valid @RequestBody ExpenseDTO expenseDTO, Authentication authentication) {
         User user = userRepo.findByUsername(authentication.getName()).orElseThrow(() -> new RuntimeException("User not found"));
         Expense expense = new Expense();
         expense.setDescription(expenseDTO.getDescription());

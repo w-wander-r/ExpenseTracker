@@ -13,14 +13,22 @@ const getExpenses = () => {
 
 const addExpense = (description, amount, date) => {
   const user = JSON.parse(localStorage.getItem('user'));
+  if (!user || !user.accessToken) {
+    return Promise.reject(new Error('User not authenticated'));
+  }
+  
   return axios.post(API_URL, {
     description,
     amount,
     date
   }, {
     headers: {
-      Authorization: 'Bearer ' + user.accessToken
+      Authorization: 'Bearer ' + user.accessToken,
+      'Content-Type': 'application/json'
     }
+  }).catch(error => {
+    console.error('Error details:', error.response);
+    throw error;
   });
 };
 

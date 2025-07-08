@@ -9,15 +9,18 @@ const AddExpense = ({ onExpenseAdded }) => {
 
   const onSubmit = async (data) => {
     try {
+      const formattedDate = new Date(data.date).toISOString().split('T')[0];
+      
       const response = await expenseService.addExpense(
         data.description,
         parseFloat(data.amount),
-        data.date
+        formattedDate
       );
       onExpenseAdded(response.data);
       reset();
     } catch (err) {
-      setError('Failed to add expense');
+      console.error('Error adding expense:', err); // Add logging
+      setError(err.response?.data?.message || 'Failed to add expense');
     }
   };
 

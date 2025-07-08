@@ -1,6 +1,7 @@
 package com.wander.ExpenseTracker.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,10 +86,10 @@ public class UserController {
         User user = new User();
         user.setUsername(userDTO.getUsername());
         user.setPassword(userDTO.getPassword());
-        user.setRole(userDTO.getRole());
-
+        
         try {
-            return ResponseEntity.ok(service.verify(user));
+            Map<String, String> tokenResponse = service.verify(user);
+            return ResponseEntity.ok(tokenResponse);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
