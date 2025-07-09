@@ -5,6 +5,7 @@ import ExpenseList from '../components/Expenses/ExpenseList';
 import AddExpense from '../components/Expenses/AddExpense';
 import MonthlyReport from '../components/Expenses/MonthlyReport';
 import authService from '../services/authService';
+import YearlyReport from '../components/Expenses/YearlyReport';
 
 const DashboardPage = () => {
   const [expenses, setExpenses] = useState([]);
@@ -29,6 +30,7 @@ const DashboardPage = () => {
       <AddExpense onExpenseAdded={handleExpenseAdded} />
       <ExpenseList />
       <MonthlyReport />
+      <YearlyReport />
     </Box>
   );
 };

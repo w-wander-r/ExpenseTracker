@@ -51,9 +51,20 @@ const getMonthlyReport = (year, month) => {
   });
 };
 
+const getYearlyReport = (year) => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  return axios.get(`${API_URL}/yearReport`, {
+    params : { year },
+    headers: {
+      Authorization: 'Bearer ' + user.accessToken
+    }
+  });
+};
+
 export default {
   getExpenses,
   addExpense,
   deleteExpense,
-  getMonthlyReport
+  getMonthlyReport,
+  getYearlyReport
 };

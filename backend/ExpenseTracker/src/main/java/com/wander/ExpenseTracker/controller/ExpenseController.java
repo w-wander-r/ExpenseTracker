@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -87,6 +88,23 @@ public class ExpenseController {
         BigDecimal total = expenses.stream()
             .map(Expense::getAmount)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return Map.of("totalSpent", total);
+    }
+
+    @GetMapping("/yearReport")
+    public Map<String, BigDecimal> getYearlyReport(
+            @RequestParam int year,
+            Authentication authentication
+    ) {
+        User user = userRepo.findByUsername(authentication.getName()).orElseThrow(() -> new RuntimeException("User not found"));
+        LocalDate start = LocalDate.of(year, 1, 1);
+        LocalDate end = start.withDayOfYear(start.lengthOfYear());
+
+        List<Expense> expenses = expenseRepo.findByUserAndDateBetween(user, start, end);
+        BigDecimal total = expenses.stream()
+                .map(Expense::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         return Map.of("totalSpent", total);
     }
