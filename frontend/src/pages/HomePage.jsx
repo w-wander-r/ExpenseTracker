@@ -14,18 +14,10 @@ const HomePage = () => {
       <Box sx={{ mt: 4 }}>
         <Button 
           variant="contained" 
-          size="large" 
-          sx={{ mr: 2 }}
-          onClick={() => navigate('/login')}
-        >
-          Login
-        </Button>
-        <Button 
-          variant="outlined" 
           size="large"
-          onClick={() => navigate('/register')}
+          onClick={() => navigate('/auth/login')}
         >
-          Register
+          Get Started
         </Button>
       </Box>
     </Box>

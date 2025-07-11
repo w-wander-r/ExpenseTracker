@@ -12,7 +12,7 @@ const Register = () => {
   const onSubmit = async (data) => {
     try {
       await authService.register(data.username, data.password, 'USER');
-      navigate('/login');
+      navigate('/auth', { state: { fromRegistration: true } });
     } catch (err) {
       setError('Registration failed. Username might be taken.');
     }
